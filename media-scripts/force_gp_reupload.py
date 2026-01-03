@@ -53,10 +53,17 @@ def add_comment(path: Path, comment: str) -> bool:
 @app.command()
 def main(
     directory: Path = typer.Argument(..., help="Directory containing media files"),
-    limit: int = typer.Option(0, "--limit", "-n", help="Max files to process (0 = unlimited)"),
+    limit: int = typer.Option(
+        0, "--limit", "-n", help="Max files to process (0 = unlimited)"
+    ),
     comment: str = typer.Option("synced", "--comment", "-c", help="Comment to add"),
     dry_run: bool = typer.Option(False, "--dry-run", help="Preview without modifying"),
-    exclude: str = typer.Option(None, "--exclude", "-x", help="Comma-separated extensions to exclude (e.g. mov,mp4)"),
+    exclude: str = typer.Option(
+        None,
+        "--exclude",
+        "-x",
+        help="Comma-separated extensions to exclude (e.g. mov,mp4)",
+    ),
 ) -> None:
     if not check_exiftool():
         print("Error: exiftool not found. Install with: pacman -S perl-image-exiftool")
@@ -79,7 +86,8 @@ def main(
     # Find supported media files (sorted for deterministic order)
     media_files = sorted(
         [
-            f for f in directory.iterdir()
+            f
+            for f in directory.iterdir()
             if f.is_file()
             and f.suffix.lower() in SUPPORTED_EXTENSIONS
             and f.suffix.lower() not in excluded
